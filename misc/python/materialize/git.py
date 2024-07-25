@@ -18,6 +18,7 @@ from typing import TypeVar
 from materialize import spawn
 from materialize.mz_version import MzVersion, TypedVersionBase
 from materialize.util import YesNoOnce
+from security import safe_command
 
 VERSION_TYPE = TypeVar("VERSION_TYPE", bound=TypedVersionBase)
 
@@ -157,8 +158,8 @@ def is_ancestor(earlier: str, later: str) -> bool:
 
 def is_dirty() -> bool:
     """Check if the working directory has modifications to tracked files"""
-    proc = subprocess.run("git diff --no-ext-diff --quiet --exit-code".split())
-    idx = subprocess.run("git diff --cached --no-ext-diff --quiet --exit-code".split())
+    proc = safe_command.run(subprocess.run, "git diff --no-ext-diff --quiet --exit-code".split())
+    idx = safe_command.run(subprocess.run, "git diff --cached --no-ext-diff --quiet --exit-code".split())
     return proc.returncode != 0 or idx.returncode != 0
 
 

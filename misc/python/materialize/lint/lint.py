@@ -22,6 +22,7 @@ from materialize.terminal import (
     with_formatting,
     with_formattings,
 )
+from security import safe_command
 
 MAIN_PATH = MZ_ROOT / "ci" / "test" / "lint-main"
 MAIN_CHECKS_PATH = MAIN_PATH / "checks"
@@ -163,8 +164,7 @@ class LintingThread(threading.Thread):
 
         try:
             # Note that coloring gets lost (e.g., in git diff)
-            proc = subprocess.Popen(
-                directory_path / file_name,
+            proc = safe_command.run(subprocess.Popen, directory_path / file_name,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
             )

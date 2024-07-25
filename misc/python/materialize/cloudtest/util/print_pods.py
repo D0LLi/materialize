@@ -11,6 +11,7 @@
 import subprocess
 
 from materialize.cloudtest import DEFAULT_K8S_CONTEXT_NAME
+from security import safe_command
 
 
 def print_pods(
@@ -30,6 +31,6 @@ def print_pods(
 
     try:
         print("Pods are:")
-        subprocess.run(cmd)
+        safe_command.run(subprocess.run, cmd)
     except subprocess.CalledProcessError as e:
         print(e, e.output)

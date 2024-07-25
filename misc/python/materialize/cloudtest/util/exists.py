@@ -13,6 +13,7 @@ import subprocess
 from materialize import ui
 from materialize.cloudtest import DEFAULT_K8S_CONTEXT_NAME
 from materialize.ui import UIError
+from security import safe_command
 
 
 def exists(
@@ -42,7 +43,7 @@ def _exists(
     ui.progress(f'running {" ".join(cmd)} ... ')
 
     try:
-        result = subprocess.run(cmd, capture_output=True, encoding="ascii")
+        result = safe_command.run(subprocess.run, cmd, capture_output=True, encoding="ascii")
         result.check_returncode()
         if should_exist:
             ui.progress("success!", finish=True)

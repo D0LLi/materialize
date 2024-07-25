@@ -39,6 +39,7 @@ import yaml
 
 from materialize import cargo, git, rustc_flags, spawn, ui, xcompile
 from materialize.xcompile import Arch
+from security import safe_command
 
 
 class Fingerprint(bytes):
@@ -769,8 +770,7 @@ class DependencySet:
             # interleaved progress output from multiple pushes is less hectic.
             # We don't use `docker push --quiet`, as that disables progress
             # output entirely.
-            push = subprocess.Popen(
-                f"docker push {shlex.quote(image)} | cat",
+            push = safe_command.run(subprocess.Popen, f"docker push {shlex.quote(image)} | cat",
                 shell=True,
             )
             pushes.append(push)
