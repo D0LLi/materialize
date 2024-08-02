@@ -16,6 +16,7 @@ import yaml
 
 from materialize.cloudtest.util.common import retry
 from materialize.cloudtest.util.wait import wait
+from security import safe_command
 
 
 class KubectlError(AssertionError):
@@ -64,8 +65,7 @@ class Kubectl:
         ]
         if namespace:
             command.extend(["-n", namespace])
-        subprocess.run(
-            command,
+        safe_command.run(subprocess.run, command,
             check=True,
         )
 
@@ -115,8 +115,7 @@ class Kubectl:
             command.extend(["-n", namespace])
 
         try:
-            subprocess.run(
-                command,
+            safe_command.run(subprocess.run, command,
                 capture_output=True,
                 check=True,
                 text=True,
@@ -147,8 +146,7 @@ class Kubectl:
 
         try:
             yaml_data: dict[str, Any] = yaml.safe_load(
-                subprocess.run(
-                    command,
+                safe_command.run(subprocess.run, command,
                     capture_output=True,
                     check=True,
                 ).stdout,

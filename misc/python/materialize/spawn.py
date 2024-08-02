@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import IO
 
 from materialize import ui
+from security import safe_command
 
 CalledProcessError = subprocess.CalledProcessError
 
@@ -69,8 +70,7 @@ def runv(
         input = stdin
         stdin = None
 
-    return subprocess.run(
-        args,
+    return safe_command.run(subprocess.run, args,
         cwd=cwd,
         env=env,
         input=input,

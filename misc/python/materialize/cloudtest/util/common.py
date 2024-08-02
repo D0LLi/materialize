@@ -13,6 +13,7 @@ from collections.abc import Callable
 from textwrap import dedent
 from time import sleep
 from typing import Any, cast
+from security import safe_command
 
 LOGGER = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ def run_process_with_error_information(
     cmd: list[str], input: str | None = None
 ) -> None:
     try:
-        subprocess.run(cmd, text=True, input=input, check=True)
+        safe_command.run(subprocess.run, cmd, text=True, input=input, check=True)
     except subprocess.CalledProcessError as e:
         log_subprocess_error(e)
         raise e
