@@ -32,6 +32,7 @@ from prettytable import PrettyTable
 from pydantic import BaseModel
 
 from materialize import MZ_ROOT, git, spawn, ui, util
+from security import safe_command
 
 # Sane defaults for internal Materialize use in the scratch account
 DEFAULT_SECURITY_GROUP_NAME = "scratch-security-group"
@@ -411,8 +412,7 @@ def mssh(
     else:
         print(f"$ mssh {host}")
 
-    subprocess.run(
-        [
+    safe_command.run(subprocess.run, [
             *SSH_COMMAND,
             *extra_ssh_args,
             host,
