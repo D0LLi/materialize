@@ -16,6 +16,7 @@ from requests.exceptions import ConnectionError, ReadTimeout
 
 from materialize.cloudtest.util.common import retry
 from materialize.cloudtest.util.jwt_key import fetch_jwt, make_jwt
+from security import safe_requests
 
 
 @dataclass
@@ -73,7 +74,7 @@ def _create_auth(
         )
 
         identity_url = f"https://{user.frontegg_host}/identity/resources/users/v2/me"
-        response = requests.get(
+        response = safe_requests.get(
             identity_url,
             headers={"authorization": f"Bearer {token}"},
             timeout=10,
